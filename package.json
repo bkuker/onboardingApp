@@ -1,0 +1,8 @@
+{
+  "name": "onboardingapp",
+  "version": "1.0.0",
+  "scripts": {
+    "watch": "npx nodemon --watch src -e gs,html,json --exec \"npm run deploy\"",
+    "deploy": "clasp push -f && clasp deploy -i AKfycbwDstqgPIKk1VVupEmAPW4hbBvliJnXENTcpMYiX0jwmQ5cSBJo1QUY4JsiEqFMrB16-A"
+  }
+}

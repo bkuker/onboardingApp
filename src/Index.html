@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 2rem;
+      color: #222;
+    }
+
+    .error {
+      color: #b00020;
+      background: #fdecea;
+      border: 1px solid #f5c2c0;
+      border-radius: 4px;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .login-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #1a73e8;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .app-header {
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <? if (!loggedIn) { ?>
+  <!-- Short path: not logged in yet -->
+  <h3>Member Tool</h3>
+  <? if (error) { ?>
+  <p class="error">
+    <?= error ?>
+  </p>
+  <? } ?>
+  <a class="login-link" href="<?= authUrl ?>">Log in with WildApricot</a>
+  <? } else { ?>
+  <!-- Main app: logged in -->
+  <div class="app-header">
+    <h3>Logged in as
+      <?= contact.name ?>
+    </h3>
+    <p>
+      Contact ID:
+      <?= contact.id ?>
+      Account ID:
+      <?= contact.accountId ?>
+      Token:
+      <?= token ?>
+    </p>
+  </div>
+  <? } ?>
+
+  <? if (token) { ?>
+  <div id="app">
+    <!-- search box, results list, and edit form will live here -->
+    <div id="search">
+      <input id="searchTerm" placeholder="Member Name" />
+      <button id="searchButton">Search</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Activate</th>
+          </tr>
+        </thead>
+        <tbody id="results">
+          <!-- rows get injected here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="activate" style="display: none">
+      <fieldset>
+        <legend>Activate <span id="name"></legend>
+        <label>
+          <input type="checkbox" id="waiverCheck" name="waiver" />
+          Waiver
+        </label>
+        <br />
+        <label>
+          <input type="checkbox" id="memberAgreementCheck" name="memberAgreement" />
+          Member Agreement
+        </label>
+        <br />
+        <label for="keyCardNumber">Key Card Number</label>
+        <input type="text" id="keyCardNumber" name="keyCardNumber" inputmode="numeric" autocomplete="off" />
+      </fieldset>
+    </div>
+  </div>
+
+  <script>
+    const token = "<?= token ?>";
+
+    //Convert google.script.run to a promise
+    function gsRun(funcName, ...args) {
+      return new Promise((resolve, reject) => {
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject)
+        [funcName](...args);
+      });
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    //On enter in search term click the search button
+    document.getElementById('searchTerm').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('searchButton').click();
+      }
+    });
+
+    //On click for search term...
+    document.getElementById('searchButton').addEventListener('click', async () => {
+      const results = document.getElementById('results');
+      const needle = document.getElementById("searchTerm").value;
+      results.innerHTML = "";
+      if (!needle.trim())
+        return;
+      const res = await gsRun('search', token, needle);
+      results.innerHTML = res.Contacts.map(c => `
+        <tr data-id="${esc(c.Id)}" data-email="${esc(c.Email)}">
+          <td>${esc(c.FirstName)} ${esc(c.LastName)}</td>
+          <td>${esc(c.Email)}</td>
+          <td><button>Activate</button></td>
+        </tr>
+      `).join('');
+    });
+
+    //Per Member Activate Button Check
+    document.getElementById('results').addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') {
+        const row = e.target.closest('tr');
+        activate(row.dataset.id, e.target);
+      }
+    });
+
+    function activate(id, btnEl) {
+      console.log("Activate", id);
+
+      const searchDiv = document.getElementById('search');
+      const activateDiv = document.getElementById('activate');
+      searchDiv.style.display = "none";
+      activateDiv.style.display = "block";
+
+  
+      // still just a stub — no google.script.run call yet
+    }
+  </script>
+  <? } ?>
+</body>
+
+</html>

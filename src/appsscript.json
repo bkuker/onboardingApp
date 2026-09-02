@@ -1,0 +1,19 @@
+{
+  "timeZone": "America/New_York",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "webapp": {
+    "access": "ANYONE_ANONYMOUS",
+    "executeAs": "USER_DEPLOYING"
+  },
+  "dependencies": {
+  "libraries": [
+    {
+      "userSymbol": "WA",
+      "libraryId": "1nBgLXTPJUBRAgO_44PMdsxuSuKv7-vhYYkQV-VKtatvrl78OkNkRadmj",
+      "version": "HEAD"
+    }
+  ]
+}
+}
+
