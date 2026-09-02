@@ -84,7 +84,8 @@
 
     <div id="activate" style="display: none">
       <fieldset>
-        <legend>Activate <span id="name"></legend>
+        <legend>Activate <span id="name"></span></legend>
+        <ul id="problemList"></ul>
         <label>
           <input type="checkbox" id="waiverCheck" name="waiver" />
           Waiver
@@ -97,6 +98,8 @@
         <br />
         <label for="keyCardNumber">Key Card Number</label>
         <input type="text" id="keyCardNumber" name="keyCardNumber" inputmode="numeric" autocomplete="off" />
+        <br />
+        <button>Activate</button>
       </fieldset>
     </div>
   </div>
@@ -134,11 +137,13 @@
       if (!needle.trim())
         return;
       const res = await gsRun('search', token, needle);
+      console.log(res);
+      let activate = "";
       results.innerHTML = res.Contacts.map(c => `
         <tr data-id="${esc(c.Id)}" data-email="${esc(c.Email)}">
           <td>${esc(c.FirstName)} ${esc(c.LastName)}</td>
           <td>${esc(c.Email)}</td>
-          <td><button>Activate</button></td>
+          <td>${c.Status != "PendingNew" ? "" : "<button>Activate</button>"}</td>
         </tr>
       `).join('');
     });
@@ -147,11 +152,11 @@
     document.getElementById('results').addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
         const row = e.target.closest('tr');
-        activate(row.dataset.id, e.target);
+        beginActivation(row.dataset.id, e.target);
       }
     });
 
-    function activate(id, btnEl) {
+    function beginActivation(id, btnEl) {
       console.log("Activate", id);
 
       const searchDiv = document.getElementById('search');
@@ -159,8 +164,40 @@
       searchDiv.style.display = "none";
       activateDiv.style.display = "block";
 
-  
-      // still just a stub — no google.script.run call yet
+      //TODO Check activate and list any problems in problemList
+      //TODO disable button & inputs if problems
+      //TODO fill out name
+      //TODO connect activate button to doActivate function
+    }
+
+    function getField(c, systemCode) {
+      const f = c.FieldValues.find(fv => fv.SystemCode === systemCode);
+      return f ? f.Value : undefined;
+    }
+
+    function canActivate(c) {
+      const problems = [];
+
+      if (c.MembershipEnabled != true) {
+        problems.push("Not a Member type contact.");
+      }
+      if (c.Status != "PendingNew") {
+        problems.push("Membership is not pending.");
+      }
+      if (c.MembershipLevel.Name != "Individual") {
+        problems.push("Not an individual membership. Use WA.");
+      }
+
+      const balance = getField(c, 'Balance');
+      if (balance > 0) {
+        problems.push(`Unpaid balance: $${balance}`);
+      }
+
+      return problems;
+    }
+
+    function doActivate(id) {
+
     }
   </script>
   <? } ?>

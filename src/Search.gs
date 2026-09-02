@@ -7,9 +7,6 @@ function search(token, needle) {
     return WA.executeApiRequest(url);
 }
 
-function canActivate(contact){
-    return true;
-}
 
 function activate(token, id) {
     checkToken(token);
