@@ -7,13 +7,12 @@
     "executeAs": "USER_DEPLOYING"
   },
   "dependencies": {
-  "libraries": [
-    {
-      "userSymbol": "WA",
-      "libraryId": "1nBgLXTPJUBRAgO_44PMdsxuSuKv7-vhYYkQV-VKtatvrl78OkNkRadmj",
-      "version": "HEAD"
-    }
-  ]
+    "libraries": [
+      {
+        "userSymbol": "WA",
+        "libraryId": "1nBgLXTPJUBRAgO_44PMdsxuSuKv7-vhYYkQV-VKtatvrl78OkNkRadmj",
+        "version": "HEAD"
+      }
+    ]
+  }
 }
-}
-

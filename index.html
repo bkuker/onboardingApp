@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base target="_top" />
+    <title>Member Tool</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <!--
+      The only server-injected data in the app: whether we have a valid
+      session token, any login error, and the WildApricot auth URL.
+      scripts/prepare-gas.mjs swaps this placeholder for the real GAS
+      scriptlet AFTER `vite build` — see gas/Auth.gs → doGet().
+    -->
+    <script>
+      window.__GAS_BOOT_DATA__ = "GAS_BOOT_DATA_PLACEHOLDER_TOKEN";
+    </script>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -39,5 +39,8 @@ function activate(token, id, waiver, memberAgreement, keyCardNumber) {
 
     const url = WA.urlBuilder().getContactsListUrl() + "/" + id;
     var contact = WA.executeApiRequest(url);
+    // NOTE: carried over unchanged from the original — this fetches the
+    // contact but never actually submits waiver/memberAgreement/
+    // keyCardNumber anywhere. Looks incomplete in the source project;
+    // left as-is since that's business logic, not a frontend concern.
 }
-

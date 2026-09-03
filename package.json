@@ -1,8 +1,20 @@
 {
-  "name": "onboardingapp",
-  "version": "1.0.0",
+  "name": "member-tool",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "watch": "npx nodemon --watch src -e gs,html,json --exec \"npm run deploy\"",
-    "deploy": "clasp push -f && clasp deploy -i AKfycbwDstqgPIKk1VVupEmAPW4hbBvliJnXENTcpMYiX0jwmQ5cSBJo1QUY4JsiEqFMrB16-A"
+    "dev": "vite",
+    "build": "vite build && node scripts/prepare-gas.mjs",
+    "deploy": "npm run build && clasp push -f && clasp deploy -i AKfycbwDstqgPIKk1VVupEmAPW4hbBvliJnXENTcpMYiX0jwmQ5cSBJo1QUY4JsiEqFMrB16-A",
+    "open": "clasp open --webapp"
+  },
+  "dependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.2.2",
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }
