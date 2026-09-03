@@ -7,8 +7,33 @@ function search(token, needle) {
     return WA.executeApiRequest(url);
 }
 
+function getField(c, systemCode) {
+    const f = c.FieldValues.find(fv => fv.SystemCode === systemCode);
+    return f ? f.Value : undefined;
+}
 
-function activate(token, id) {
+function canActivate(c) {
+    const problems = [];
+
+    if (c.MembershipEnabled != true) {
+        problems.push("Not a Member type contact.");
+    }
+    if (c.Status != "PendingNew") {
+        problems.push("Membership is not pending.");
+    }
+    if (c.MembershipLevel.Name != "Individual") {
+        problems.push("Not an individual membership. Use WA.");
+    }
+
+    const balance = getField(c, 'Balance');
+    if (balance > 0) {
+        problems.push(`Unpaid balance: $${balance}`);
+    }
+
+    return problems;
+}
+
+function activate(token, id, waiver, memberAgreement, keyCardNumber) {
     checkToken(token);
     WA.initialize(PropertiesService.getScriptProperties().getProperty('WA_API_KEY'));
 

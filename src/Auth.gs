@@ -11,13 +11,16 @@ function doGet(e) {
   template.loggedIn = false;
   template.error = null;
   template.contact = null;
+  template.token = null;
 
   if (e.parameter.code) {
     try {
-      let contact = handleOAuthCallback(e.parameter.code, redirectUri);
-      template.contact = contact;
-      template.loggedIn = true;
-      template.token = checkAuthAndGenerateToken(contact);
+      if ( e.parameter.code ){
+        let contact = handleOAuthCallback(e.parameter.code, redirectUri);
+        template.contact = contact;
+        template.loggedIn = true;
+        template.token = checkAuthAndGenerateToken(contact);
+      }
     } catch (err) {
       console.log(err);
       template.token = false;

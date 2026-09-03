@@ -3,204 +3,70 @@
 
 <head>
   <base target="_top">
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      margin: 2rem;
-      color: #222;
-    }
-
-    .error {
-      color: #b00020;
-      background: #fdecea;
-      border: 1px solid #f5c2c0;
-      border-radius: 4px;
-      padding: 0.5rem 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .login-link {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background: #1a73e8;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-
-    .app-header {
-      margin-bottom: 1.5rem;
-    }
-  </style>
+  <?!= include('Index.css'); ?>
 </head>
 
 <body>
-
-  <? if (!loggedIn) { ?>
-  <!-- Short path: not logged in yet -->
-  <h3>Member Tool</h3>
-  <? if (error) { ?>
-  <p class="error">
-    <?= error ?>
-  </p>
-  <? } ?>
-  <a class="login-link" href="<?= authUrl ?>">Log in with WildApricot</a>
-  <? } else { ?>
-  <!-- Main app: logged in -->
-  <div class="app-header">
-    <h3>Logged in as
-      <?= contact.name ?>
-    </h3>
-    <p>
-      Contact ID:
-      <?= contact.id ?>
-      Account ID:
-      <?= contact.accountId ?>
-      Token:
-      <?= token ?>
+  <div class="container">
+    <h1>
+      <img src="data:image/gif;base64,R0lGODlhbgBvAHAAACwAAAAAbgBvAIT////f39+AgIBgYGAgICC/v78AAABAQECfn5/Dw8PPz88YGBgEBAQQEBA4ODh/f388PDxISEgwMDAUFBSnp6eLi4twcHAICAgoKChUVFQcHBwMDAwAAAAAAAAAAAAAAAAF/yAgjmRpnmiqrmzrvvAbCAMRiwExFHfv/6OCwEA0CG6Hog4BbDpNwqKUEIAVpMoD88mNzbDgASwJngqq3TRqUAYTeC1EG7xV20fDufTgIuuJdXd2V39FcCpyhURogoOKRDYrBI8GjYIBlAaBJnmPloKZkTglmXyfdn6KBJNTrJRip2qpmbRYsLFdnbW7REe4ubzBmr9dhMK1h8RNxseZm8oiCL4tus2UBNMrAQfZT4TYjCc51sHYKgWsb2muBjrJeOTN3SIC7O3hQLNKyfrxu1Tw2phqkmgOAQTbjq06MGDAgQP2ar2pVmaeF39uBLwzEaCAQ4xTNo4B2e7MjQAI+v81E3WD4kqRXthgvGUFo7ouAWTGs7hC5b9nXBKSu+lCZ7OBl1zyoslinDxcSmkhdeGUF9FYVXdNlVEOpqWsoYBgkghthNCwTcZm8oqV1tUfBRWxRSFNgEknzArNhRFXTzcEDQMLDlzAD74fUbHsjdG3zFafRVIWOYxY752IWA5DBmQYJ2YldxrbOuHwYSrTBwpPNksZx17RUoA2MVqmdZAiUw0jcHUXR6dVPAGAxcKSy5/gt4nkLkLbSHIwwWEbSiOdSAtjy/WgcaVDCsyzZZjO9nsdd4lUAyRPL2hKbXES1d8D+WObBPbzRaa5YqITQYH/nYnzx2Jx/OHCfST4cUj/fwB8Nh0KkMnWkh7ioYDgCAEC0AkTfqzioYdeJbaVDEJsNkx5yuG3SEDD+CEhCmoZxJB/KnQkgIlYvHChCBluCEBBBwlXz144ZpFeMsFUaKF5Ca5GT2Q8tvEWJ8GgESMtSp6wIwA9QilcP8g9yYuVwYRpn2ndlIZUSg8lAxhE3CxWHX04BPNiWSnklQmZvNyJp4Bj1hnonzBcuaegu9RH6AnBwIESAggkoMCklFZq6aSLxnDpppUmAKmfmYZaAgILGPAfSaimipABDCBFQAOaGJrqrMecSkQyDhjwgKy09loLSu1swsYDAPhqbDA/GsAUqco2eOyzmQDwgAEQBCIT/x9FQnusDTrBF4EB2Gor7hx8dGtfOwA0N+64Ykyy0VjSrisvc84eZoie80LLBBE7kELErvnKCywgoyYRbsDaisGGBAccdoUNczoWWD86BMYKQw1d3JA+FdcA7mAge5wJse6ikMCtvOqRTETEYniry6aOMO0eMhugaLq0DAwjvdm+XPMUKh5Cxso0izDtzerqEW87Ih0wAbozU5JMVi3DLLTPOLgy0NEsJN1Gu06WEMBYtkpdglEmDG11CVFvjcVA+D6yrwEUIJcEwGuJXUTVa0cZM9spGv32c7Ukm2U0pfIRsXc4oCGTlX1ziTUjk7hdNABxFyJGEhCwVVABKZfh6P8WD8scudpGm0WA5UxiPuaWYq+O7uI+bzPCTR6djrXNMrMeuOu1EJuEBCfWCMhwbTjKO+YY3oK65H8XC5AIh0T9e+ZKEzJ2CwEQD/EjyjOFifNYP8/vYdaDS/gjwlP7govgzaH88oKTH735/5qQPtyFA0mVAd4D3oAEVbWx2O9q0WMcCfa3vkIwYRKlOpzYDAg9lSEKDTM7YOSmEA4GUi8siUDJzUpQgXuErnbMeUDUNOi3Q7yNER4UoFycZYEeqEUMc5pfeHSXQCxULYbYwwKHDHCBIHmBAKXS1dKk5CE9NBEST2xHFFuxCjdMUQ98sB6BxKah/HkNYZTgAyEGkBP/sUziDfEDY1jGMoEn6IQKyFOjZfxgpqYYAAOQEI4cacEDMpSqjizgQR5wuEf2LY2MoJIBK4hFOzUygRAXuIMuiBXHQvIgLiNKywAqQAYxVBKM6rjWkBqRE0iMLX1y5INQHDAKUnIwAKhEmCc7NMK0DEEmBCBWLOdFLGN8a0qX6GL+ShkwdRSECYlMAzPI+CV5BQmWCoRGDhyQh1xGw0GpsuYSMzCJZNphe8awJjSNpc2oMYAHHQkVbcT5gJ5JpGXoGI2ohETG34zOnX/IpZX80LCH1BIaeXEHDgBTjgEU8AHsWAA65ykONnxBCelpHKQesDF2rI4hKvwPDlSIBQGcZQyYDDWBBgyQRCU8QKMcEUdH2omFC6DrRyHl3o0QApuFYBQBKmwnROZgAZSYI6Y9IETdsKmHBgiAAi/7J1DFsQU2ZKAACNhAOw6QKwNoYKdGLUCuTEGjpeIEpZM4wliqMARTQFWpC151wtjQmta22iEEADs=" />
+      New Member Activation Tool
+    </h1>
+    <? if (!loggedIn) { ?>
+    <!-- Short path: not logged in yet -->
+    <? if (error) { ?>
+    <p class="error">
+      <?= error ?>
     </p>
-  </div>
-  <? } ?>
+    <? } ?>
+    <a class="login-link" href="<?= authUrl ?>">Log in with WildApricot</a>
+    <? } ?>
 
-  <? if (token) { ?>
-  <div id="app">
-    <!-- search box, results list, and edit form will live here -->
-    <div id="search">
-      <input id="searchTerm" placeholder="Member Name" />
-      <button id="searchButton">Search</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Activate</th>
-          </tr>
-        </thead>
-        <tbody id="results">
-          <!-- rows get injected here -->
-        </tbody>
-      </table>
-    </div>
+    <? if (token) { ?>
+    <div id="app">
+      <!-- search box, results list, and edit form will live here -->
+      <div id="search">
+        <input id="searchTerm" placeholder="Member Name" />
+        <button id="searchButton">Search</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Activate</th>
+            </tr>
+          </thead>
+          <tbody id="results">
+            <!-- rows get injected here -->
+          </tbody>
+        </table>
+      </div>
 
-    <div id="activate" style="display: none">
-      <fieldset>
-        <legend>Activate <span id="name"></span></legend>
-        <ul id="problemList"></ul>
-        <label>
+      <div id="activate" style="display: none">
+        <fieldset>
+          <legend>Activate <span id="name"></span></legend>
+          <ul id="problemList"></ul>
+          <label for="waiverCheck">Waiver</label>
           <input type="checkbox" id="waiverCheck" name="waiver" />
-          Waiver
-        </label>
-        <br />
-        <label>
+          <br />
+          <label for="memberAgreementCheck">Member Agreement</label>
           <input type="checkbox" id="memberAgreementCheck" name="memberAgreement" />
-          Member Agreement
-        </label>
-        <br />
-        <label for="keyCardNumber">Key Card Number</label>
-        <input type="text" id="keyCardNumber" name="keyCardNumber" inputmode="numeric" autocomplete="off" />
-        <br />
-        <button>Activate</button>
-      </fieldset>
+          <br />
+          <label for="keyCardNumber">Key Card Number</label>
+          <input type="text" id="keyCardNumber" name="keyCardNumber" inputmode="numeric" autocomplete="off" />
+          <br />
+          <button id="activateSubmitBtn">Activate</button>
+          <button id="cancelActivateBtn" type="button">Cancel</button>
+        </fieldset>
+      </div>
+
+      <script>
+        const token = "<?= token ?>";
+      </script>
+      <?!= include('Index.js'); ?>
+
+      <? } ?>
     </div>
-  </div>
-
-  <script>
-    const token = "<?= token ?>";
-
-    //Convert google.script.run to a promise
-    function gsRun(funcName, ...args) {
-      return new Promise((resolve, reject) => {
-        google.script.run
-          .withSuccessHandler(resolve)
-          .withFailureHandler(reject)
-        [funcName](...args);
-      });
-    }
-
-    function esc(s) {
-      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    }
-
-    //On enter in search term click the search button
-    document.getElementById('searchTerm').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('searchButton').click();
-      }
-    });
-
-    //On click for search term...
-    document.getElementById('searchButton').addEventListener('click', async () => {
-      const results = document.getElementById('results');
-      const needle = document.getElementById("searchTerm").value;
-      results.innerHTML = "";
-      if (!needle.trim())
-        return;
-      const res = await gsRun('search', token, needle);
-      console.log(res);
-      let activate = "";
-      results.innerHTML = res.Contacts.map(c => `
-        <tr data-id="${esc(c.Id)}" data-email="${esc(c.Email)}">
-          <td>${esc(c.FirstName)} ${esc(c.LastName)}</td>
-          <td>${esc(c.Email)}</td>
-          <td>${c.Status != "PendingNew" ? "" : "<button>Activate</button>"}</td>
-        </tr>
-      `).join('');
-    });
-
-    //Per Member Activate Button Check
-    document.getElementById('results').addEventListener('click', (e) => {
-      if (e.target.tagName === 'BUTTON') {
-        const row = e.target.closest('tr');
-        beginActivation(row.dataset.id, e.target);
-      }
-    });
-
-    function beginActivation(id, btnEl) {
-      console.log("Activate", id);
-
-      const searchDiv = document.getElementById('search');
-      const activateDiv = document.getElementById('activate');
-      searchDiv.style.display = "none";
-      activateDiv.style.display = "block";
-
-      //TODO Check activate and list any problems in problemList
-      //TODO disable button & inputs if problems
-      //TODO fill out name
-      //TODO connect activate button to doActivate function
-    }
-
-    function getField(c, systemCode) {
-      const f = c.FieldValues.find(fv => fv.SystemCode === systemCode);
-      return f ? f.Value : undefined;
-    }
-
-    function canActivate(c) {
-      const problems = [];
-
-      if (c.MembershipEnabled != true) {
-        problems.push("Not a Member type contact.");
-      }
-      if (c.Status != "PendingNew") {
-        problems.push("Membership is not pending.");
-      }
-      if (c.MembershipLevel.Name != "Individual") {
-        problems.push("Not an individual membership. Use WA.");
-      }
-
-      const balance = getField(c, 'Balance');
-      if (balance > 0) {
-        problems.push(`Unpaid balance: $${balance}`);
-      }
-
-      return problems;
-    }
-
-    function doActivate(id) {
-
-    }
-  </script>
-  <? } ?>
 </body>
 
 </html>
