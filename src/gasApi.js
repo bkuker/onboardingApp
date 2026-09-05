@@ -6,6 +6,11 @@
 
 const isInGas = typeof google !== 'undefined' && !!google.script?.run
 
+// Simulated network latency for dev mocks, so loading states are actually
+// visible in `vite dev` instead of resolving instantly.
+const MOCK_DELAY_MS = 2000
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 // Fixtures for local development. Keep these just realistic enough to
 // build/test the UI against without a real deployment.
 const devMocks = {
@@ -47,7 +52,7 @@ export function gasRun(fnName, ...args) {
     return Promise.resolve(null)
   }
   console.info(`[gasApi] dev mock: ${fnName}(${args.map((a) => JSON.stringify(a)).join(', ')})`)
-  return mock(...args)
+  return delay(MOCK_DELAY_MS).then(() => mock(...args))
 }
 
 /**

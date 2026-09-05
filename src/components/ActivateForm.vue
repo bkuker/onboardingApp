@@ -46,7 +46,7 @@ function onSubmit() {
     <fieldset>
       <legend>Activate <span id="name">{{ contact?.FirstName }} {{ contact?.LastName }}</span></legend>
 
-      <ul id="problemList">
+      <ul id="problemList" v-if="hasProblems">
         <li v-for="p in problems" :key="p">{{ p }}</li>
       </ul>
 
@@ -96,14 +96,14 @@ function onSubmit() {
 }
 
 #activate label {
-  width: 150px;
+  width: 175px;
   display: inline-block;
   font-weight: bold;
 }
 #activate label,
 #activate input,
 #activate button {
-  margin-top: 10px;
+  margin-top: 20px;
   margin-left: 20px;
 }
 </style>

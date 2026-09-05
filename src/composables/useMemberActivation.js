@@ -16,9 +16,11 @@ export function useMemberActivation(token) {
     results.value = null
     if (!needle) return
 
+    view.value = 'wait'
     const res = await gasRun('search', token, needle)
     lastResultsById.value = Object.fromEntries(res.Contacts.map((c) => [c.Id, c]))
     results.value = res.Contacts
+    view.value = 'search'
   }
 
   async function beginActivation(id) {
@@ -28,6 +30,7 @@ export function useMemberActivation(token) {
       return
     }
     activeContact.value = c
+    view.value = 'wait'
     problems.value = await gasRun('canActivate', c)
     view.value = 'activate'
   }
