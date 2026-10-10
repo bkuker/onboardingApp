@@ -29,8 +29,9 @@ function onSubmit() {
     alert('Both Waiver and Member Agreement must be confirmed.')
     return
   }
-  if (!keyCardNumber.value.trim()) {
-    alert('Key Card Number is required.')
+  const card = keyCardNumber.value.trim()
+  if (!/^\d{8}$/.test(card)) {
+    alert('Key Card Number must be exactly 8 digits.')
     return
   }
   emit('submit', {
@@ -50,11 +51,11 @@ function onSubmit() {
         <li v-for="p in problems" :key="p">{{ p }}</li>
       </ul>
 
-      <label for="waiverCheck">Waiver</label>
+      <label for="waiverCheck">Signed Waiver:</label>
       <input id="waiverCheck" v-model="waiver" type="checkbox" name="waiver" :disabled="hasProblems" />
       <br />
 
-      <label for="memberAgreementCheck">Member Agreement</label>
+      <label for="memberAgreementCheck">Signed Member Agreement:</label>
       <input
         id="memberAgreementCheck"
         v-model="memberAgreement"
@@ -64,7 +65,7 @@ function onSubmit() {
       />
       <br />
 
-      <label for="keyCardNumber">Key Card Number</label>
+      <label for="keyCardNumber">Key Card Number:</label>
       <input
         id="keyCardNumber"
         v-model="keyCardNumber"
@@ -74,7 +75,10 @@ function onSubmit() {
         autocomplete="off"
         :disabled="hasProblems"
       />
-      <br />
+      <p class="keyHelp">
+        Key Card: Last 8 digits.<br>
+        Key Fob: 175xxxxx using number from fob.
+      </p>
 
       <button id="activateSubmitBtn" :disabled="hasProblems || activating" @click="onSubmit">
         {{ activating ? 'Activating…' : 'Activate' }}
@@ -96,7 +100,7 @@ function onSubmit() {
 }
 
 #activate label {
-  width: 175px;
+  width: 250px;
   display: inline-block;
   font-weight: bold;
 }
@@ -105,6 +109,11 @@ function onSubmit() {
 #activate button {
   margin-top: 20px;
   margin-left: 20px;
+}
+
+.keyHelp {
+  font-style: italic;
+  padding-left: 290px;
 }
 </style>
 

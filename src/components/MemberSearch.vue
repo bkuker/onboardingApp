@@ -37,9 +37,10 @@ function onKeydown(e) {
           <td>{{ c.FirstName }} {{ c.LastName }}</td>
           <td>{{ c.Email }}</td>
           <td>
-            <button v-if="c.Status === 'PendingNew'" @click="emit('activate', c.Id)">
+            <button v-if="c.problems.length == 0" @click="emit('activate', c.Id)">
               Activate
             </button>
+            <div class="problem" v-else v-for="p in c.problems">{{ p }}</div>
           </td>
         </tr>
       </tbody>
@@ -62,5 +63,12 @@ td {
 tbody tr:nth-child(even) {
   background-color: #eee;
 }
+
+.problem::before {
+  content: "✕";
+  color: red;
+  margin-right: 0.5em;
+}
+
 </style>
 

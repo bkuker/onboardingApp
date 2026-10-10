@@ -54,7 +54,7 @@ const {
 
 <style scoped>
 .container {
-  width: 800px;
+  width: 900px;
   max-width: 100%;
   margin: 0 auto;
   background: white;

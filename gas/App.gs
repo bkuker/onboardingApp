@@ -111,3 +111,113 @@ function doGet(e) {
   }
 }
 
+function search(token, needle) {
+    checkToken(token);
+    WA.initialize(PropertiesService.getScriptProperties().getProperty('WA_API_KEY'));
+
+    needle = needle.replace(/[^a-zA-Z0-9]/g, '');
+    const url = WA.urlBuilder().getContactsListUrl() + `?$async=false&$filter=substringof('LastName','${needle}') OR substringof('FirstName','${needle}') OR substringof('Email','${needle}')`;
+    let results = WA.executeApiRequest(url);
+
+    results.Contacts.forEach(function (c){
+        c.problems = canActivate(c);
+    });
+
+    return results;
+}
+
+function getField(c, systemCode) {
+    const f = c.FieldValues.find(fv => fv.SystemCode === systemCode);
+    return f ? f.Value : undefined;
+}
+
+function canActivate(c) {
+    const problems = [];
+
+    if (c.MembershipEnabled != true) {
+        problems.push("Not a Member type contact.");
+    }
+    if (c.Status != "PendingNew") {
+        problems.push("Membership is not pending.");
+    }
+    if (c.MembershipLevel && c.MembershipLevel.Name != "Individual") {
+        problems.push("Not an individual membership. Use WA.");
+    }
+
+    const balance = getField(c, 'Balance');
+    if (balance > 0) {
+        problems.push(`Unpaid balance: $${balance}`);
+    }
+
+    return problems;
+}
+
+/*
+function testActivate() {
+    let id = "99229393";
+    activate(null, id, true, true, "12345");
+}
+*/
+
+function activate(token, id, waiver, memberAgreement, keyCardNumber) {
+    checkToken(token);
+    WA.initialize(PropertiesService.getScriptProperties().getProperty('WA_API_KEY'));
+    const url = WA.urlBuilder().getContactsListUrl() + "/" + id;
+    var contact = WA.executeApiRequest(url);
+    console.log(contact);
+
+    if (contact.Id != id) {
+        throw "ID Doesnt match WTF?";
+    }
+    // NOTE: carried over unchanged from the original — this fetches the
+    // contact but never actually submits waiver/memberAgreement/
+    // keyCardNumber anywhere. Looks incomplete in the source project;
+    // left as-is since that's business logic, not a frontend concern.
+
+    const notes = getField(contact, 'Notes') + `\n\n${new Date().toLocaleDateString('en-US')}: Activated by Activation tool.`;
+    let payload = {
+        Id: id,
+        Status: 'Active',
+        FieldValues:
+            [{
+                FieldName: 'Signed Waiver On File',
+                Value: waiver,
+                SystemCode: 'custom-9588278'
+            },
+
+            {
+                FieldName: 'Signed Membership Agreement On File',
+                Value: memberAgreement,
+                SystemCode: 'custom-9588277'
+            },
+            {
+                FieldName: 'Key Card Number',
+                Value: keyCardNumber,
+                SystemCode: 'custom-9565462'
+            },
+            {
+                FieldName: 'Notes',
+                Value: notes,
+                SystemCode: 'Notes'
+            },
+            {
+                FieldName: 'Renewal due',
+                Value: oneMonthFromNow(),
+                SystemCode: 'RenewalDue'
+            },
+            ]
+    }
+    console.log(payload);
+    WA.executeApiRequest(url, "PUT", payload);
+
+
+    function oneMonthFromNow() {
+        const d = new Date();
+        d.setMonth(d.getMonth() + 1);
+
+        const pad = (n) => String(n).padStart(2, '0');
+
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T00:00:00`;
+    }
+
+}

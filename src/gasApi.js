@@ -16,9 +16,9 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const devMocks = {
   search: async (token, needle) => {
     const all = [
-      { Id: 1, FirstName: 'Jane', LastName: 'Doe', Email: 'jane@example.com', Status: 'PendingNew' },
-      { Id: 2, FirstName: 'John', LastName: 'Smith', Email: 'john@example.com', Status: 'Active' },
-      { Id: 3, FirstName: 'Alex', LastName: 'Kim', Email: 'alex@example.com', Status: 'PendingNew' },
+      { Id: 1, FirstName: 'Jane', LastName: 'Doe', Email: 'jane@example.com', Status: 'PendingNew', problems: [] },
+      { Id: 2, FirstName: 'John', LastName: 'Smith', Email: 'john@example.com', Status: 'Active', problems: ['Membership is not pending.'] },
+      { Id: 3, FirstName: 'Alex', LastName: 'Kim', Email: 'alex@example.com', Status: 'PendingNew', problems: [] },
     ]
     const q = needle.toLowerCase()
     return {
