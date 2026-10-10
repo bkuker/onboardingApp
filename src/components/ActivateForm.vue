@@ -3,7 +3,6 @@ import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
   contact: { type: Object, default: null },
-  problems: { type: Array, default: () => [] },
   activating: { type: Boolean, default: false },
 })
 const emit = defineEmits(['submit', 'cancel'])
@@ -22,7 +21,7 @@ watch(
   },
 )
 
-const hasProblems = computed(() => props.problems.length > 0)
+const hasProblems = computed(() => props.contact.problems.length > 0)
 
 function onSubmit() {
   if (!waiver.value || !memberAgreement.value) {
@@ -48,7 +47,7 @@ function onSubmit() {
       <legend>Activate <span id="name">{{ contact?.FirstName }} {{ contact?.LastName }}</span></legend>
 
       <ul id="problemList" v-if="hasProblems">
-        <li v-for="p in problems" :key="p">{{ p }}</li>
+        <li v-for="p in contact.problems" :key="p">{{ p }}</li>
       </ul>
 
       <label for="waiverCheck">Signed Waiver:</label>

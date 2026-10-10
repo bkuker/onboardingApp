@@ -8,7 +8,6 @@ export function useMemberActivation(token) {
 
   const view = ref('search') // 'search' | 'activate'
   const activeContact = ref(null)
-  const problems = ref([])
   const activating = ref(false)
 
   async function runSearch() {
@@ -31,13 +30,11 @@ export function useMemberActivation(token) {
     }
     activeContact.value = c
     view.value = 'wait'
-    problems.value = await gasRun('canActivate', c)
     view.value = 'activate'
   }
 
   function cancelActivation() {
     activeContact.value = null
-    problems.value = []
     view.value = 'search'
   }
 
@@ -70,7 +67,6 @@ export function useMemberActivation(token) {
     results,
     view,
     activeContact,
-    problems,
     activating,
     runSearch,
     beginActivation,
