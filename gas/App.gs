@@ -149,14 +149,24 @@ function handleOAuthCallback_(code, redirectUri) {
 }
 
 // Authorization: look up the authenticated contact in WA and check it.
-// PLACEHOLDER: the last-name check is temporary and will be replaced with a check
-// against other data about the authenticated user.
 function createSessionIfAuthorized_(user) {
+  const ACCESS_FIELD_NAME = 'Volunteer System Access';
+  const ACCESS_CHOICE_LABEL = 'Onboarding App';
+
   WA.initialize(PropertiesService.getScriptProperties().getProperty('WA_API_KEY'));
   const url = WA.urlBuilder().getContactsListUrl() + '/' + user.id;
   const contact = WA.executeApiRequest(url);
 
-  if (contact.LastName != 'Kuker') {
+  // Fail closed: a missing field or unexpected shape denies access.
+  const fv = (contact.FieldValues || []).find(function (f) {
+    return f.FieldName === ACCESS_FIELD_NAME;
+  });
+  const hasAccess = !!fv && Array.isArray(fv.Value) && fv.Value.some(function (choice) {
+    const label = (choice && typeof choice === 'object') ? choice.Label : choice;
+    return label === ACCESS_CHOICE_LABEL;
+  });
+
+  if (!hasAccess) {
     console.log('Login refused for contact id ' + user.id);
     throw userError_('Not Authorized to Onboard');
   }
